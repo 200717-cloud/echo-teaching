@@ -1,0 +1,2294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Echo支教智囊 - AI赋能支教师资培养</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        .app-container { min-height: 100vh; display: flex; flex-direction: column; }
+        .header {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            position: sticky; top: 0; z-index: 100;
+        }
+        .header-content {
+            max-width: 1400px; margin: 0 auto; padding: 1rem 2rem;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .logo { display: flex; align-items: center; gap: 1rem; }
+        .logo-icon {
+            width: 50px; height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 24px;
+        }
+        .logo-text h1 {
+            font-size: 1.5rem; font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+        .logo-text p { font-size: 0.875rem; color: #666; margin: 0; }
+        .nav-menu { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .nav-item {
+            display: flex; align-items: center; gap: 0.5rem;
+            padding: 0.75rem 1.25rem; border: none; background: transparent; color: #666;
+            font-size: 0.9375rem; font-weight: 500; border-radius: 10px; cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .nav-item:hover { background: rgba(102,126,234,0.1); color: #667eea; }
+        .nav-item.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; box-shadow: 0 4px 15px rgba(102,126,234,0.4);
+        }
+        .nav-item .icon { font-size: 1.25rem; }
+        .main-content {
+            flex: 1; max-width: 1400px; margin: 0 auto;
+            padding: 2rem; width: 100%;
+        }
+        .page { display: none; animation: fadeIn 0.5s ease; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .page-header {
+            background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
+            border-radius: 20px; padding: 2rem; margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .page-title { font-size: 2rem; font-weight: 700; color: #333; margin-bottom: 0.5rem; }
+        .page-description { color: #666; font-size: 1rem; }
+        .card {
+            background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
+            border-radius: 20px; padding: 2rem; margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .card-title {
+            font-size: 1.5rem; font-weight: 600; color: #333;
+            margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;
+        }
+        .hero-section {
+            background: linear-gradient(135deg, rgba(102,126,234,0.9) 0%, rgba(118,75,162,0.9) 100%);
+            border-radius: 24px; padding: 3rem; color: white; margin-bottom: 2rem;
+            position: relative; overflow: hidden;
+        }
+        .hero-content { position: relative; z-index: 1; max-width: 800px; }
+        .hero-title { font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; }
+        .hero-subtitle { font-size: 1.125rem; opacity: 0.95; line-height: 1.8; margin-bottom: 2rem; }
+        .hero-stats { display: flex; gap: 3rem; flex-wrap: wrap; }
+        .stat-item { display: flex; flex-direction: column; align-items: center; }
+        .stat-number { font-size: 2.5rem; font-weight: 700; line-height: 1; margin-bottom: 0.25rem; }
+        .stat-label { font-size: 0.875rem; opacity: 0.9; }
+        .quick-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+        
+        .section-divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 2.5rem 0 1.5rem 0;
+            padding: 0 1rem;
+        }
+        
+        .section-divider .divider-icon {
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .section-divider .divider-text {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #667eea;
+            white-space: nowrap;
+        }
+        
+        .section-divider .divider-line {
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(to right, #667eea, rgba(102,126,234,0.2));
+            border-radius: 2px;
+        }
+        
+        .performance-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(248,249,250,0.98) 100%);
+            border-left: 4px solid #667eea;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .performance-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(102,126,234,0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        
+        .action-card {
+            background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
+            border-radius: 20px; padding: 2rem; text-align: center; cursor: pointer;
+            transition: all 0.3s ease; border: 2px solid transparent;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .action-card:hover {
+            transform: translateY(-10px); box-shadow: 0 8px 30px rgba(102,126,234,0.3);
+            border-color: #667eea;
+        }
+        .card-icon {
+            width: 80px; height: 80px; margin: 0 auto 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px; display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 2rem;
+        }
+        .action-card h4 { font-size: 1.25rem; font-weight: 600; color: #333; margin-bottom: 0.5rem; }
+        .action-card p { font-size: 0.875rem; color: #666; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; font-weight: 500; color: #333; margin-bottom: 0.5rem; font-size: 0.9375rem; }
+        .required { color: #e74c3c; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 0.875rem 1rem; border: 2px solid #e0e0e0; border-radius: 12px;
+            font-size: 0.9375rem; transition: all 0.3s ease; background: white; font-family: inherit;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; }
+        .form-grid-2 { grid-template-columns: 1fr 1fr; }
+        .two-column-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .btn {
+            padding: 0.875rem 1.5rem; border: none; border-radius: 12px; font-size: 0.9375rem; font-weight: 600;
+            cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+            gap: 0.5rem; transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; box-shadow: 0 4px 15px rgba(102,126,234,0.4);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102,126,234,0.5); }
+        .btn-secondary { background: white; color: #667eea; border: 2px solid #667eea; }
+        .btn-secondary:hover { background: rgba(102,126,234,0.1); }
+        .btn-large { padding: 1rem 2rem; font-size: 1rem; }
+        .tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 2px solid #e0e0e0; flex-wrap: wrap; }
+        .tab-btn {
+            padding: 0.75rem 1.5rem; border: none; background: transparent; color: #666;
+            font-size: 0.9375rem; font-weight: 500; cursor: pointer; position: relative; transition: all 0.3s ease;
+        }
+        .tab-btn:hover { color: #667eea; }
+        .tab-btn.active { color: #667eea; }
+        .tab-btn.active::after {
+            content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
+            height: 2px; background: #667eea;
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .identity-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+        .identity-option {
+            padding: 1rem; border: 2px solid #e0e0e0; border-radius: 12px;
+            cursor: pointer; transition: all 0.3s ease; text-align: center;
+        }
+        .identity-option:hover { border-color: #667eea; background: rgba(102,126,234,0.1); }
+        .identity-option.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, rgba(102,126,234,0.2) 0%, rgba(118,75,162,0.2) 100%);
+        }
+        .identity-option .icon { font-size: 2rem; margin-bottom: 0.5rem; }
+        .questionnaire-item { background: white; border: 2px solid #e0e0e0; border-radius: 16px; padding: 1.5rem; margin-bottom: 1rem; }
+        .question-options { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .question-option {
+            padding: 0.5rem 1rem; border: 2px solid #e0e0e0; border-radius: 8px;
+            background: white; cursor: pointer; transition: all 0.3s ease; font-size: 0.875rem;
+        }
+        .question-option:hover { border-color: #667eea; }
+        .question-option.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #667eea; color: white;
+        }
+        .case-card {
+            background: white; border: 2px solid #e0e0e0; border-radius: 16px;
+            padding: 1.5rem; margin-bottom: 1rem; cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .case-card:hover { border-color: #667eea; box-shadow: 0 4px 15px rgba(102,126,234,0.2); }
+        .case-tags { margin: 0.75rem 0; }
+        .case-tag {
+            display: inline-block; padding: 0.25rem 0.75rem;
+            background: rgba(102,126,234,0.1); color: #667eea;
+            border-radius: 12px; font-size: 0.75rem; margin: 0.25rem;
+        }
+        .empty-state {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 3rem 2rem; color: #999; text-align: center;
+        }
+        .empty-state .icon { font-size: 4rem; margin-bottom: 1rem; opacity: 0.5; }
+        .result-placeholder {
+            text-align: center; padding: 3rem 2rem; color: #999;
+        }
+        .result-placeholder .icon { font-size: 4rem; margin-bottom: 1rem; opacity: 0.5; }
+        .result-card {
+            background: white; border: 2px solid #e0e0e0; border-radius: 16px;
+            padding: 1.5rem; margin-bottom: 1rem;
+        }
+        .result-card h4 { color: #667eea; margin-bottom: 0.75rem; }
+        .result-card ul { margin-left: 1.5rem; }
+        .process-step {
+            background: #f8f9fa; padding: 1rem; border-radius: 12px;
+            margin-bottom: 1rem; border-left: 4px solid #667eea;
+        }
+        .process-step-title { font-weight: 600; color: #333; margin-bottom: 0.5rem; }
+        .process-step-content { color: #666; }
+        .chat-container {
+            background: rgba(255,255,255,0.95); border-radius: 20px; padding: 2rem;
+            min-height: 600px; display: flex; flex-direction: column;
+        }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 1rem; }
+        .chat-message { display: flex; gap: 1rem; max-width: 85%; }
+        .chat-message.user { align-self: flex-end; flex-direction: row-reverse; }
+        .chat-message.assistant { align-self: flex-start; }
+        .message-avatar {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; display: flex; align-items: center; justify-content: center;
+            font-size: 1.25rem; flex-shrink: 0;
+        }
+        .chat-message.user .message-avatar { background: #f39c12; }
+        .message-content {
+            background: #f8f9fa; padding: 1rem 1.25rem; border-radius: 16px;
+            line-height: 1.6; white-space: pre-wrap; word-wrap: break-word;
+        }
+        .chat-message.user .message-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;
+        }
+        .chat-input-container {
+            padding: 1rem; border-top: 1px solid #e0e0e0; display: flex; gap: 1rem; align-items: flex-end;
+        }
+        .chat-input { flex: 1; padding: 0.875rem 1rem; border: 2px solid #e0e0e0; border-radius: 12px; resize: none; font-family: inherit; }
+        .toast-container {
+            position: fixed; top: 20px; right: 20px; z-index: 1000; display: flex; flex-direction: column; gap: 0.75rem;
+        }
+        .toast {
+            padding: 1rem 1.5rem; border-radius: 12px; background: white; box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            display: flex; align-items: center; gap: 0.75rem; animation: slideIn 0.3s ease;
+        }
+        .toast.success { border-left: 4px solid #27ae60; }
+        .toast.warning { border-left: 4px solid #f39c12; }
+        .toast.error { border-left: 4px solid #e74c3c; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(100px); } to { opacity: 1; transform: translateX(0); } }
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center;
+            z-index: 1000; opacity: 0; visibility: hidden; transition: all 0.3s ease;
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal {
+            background: white; border-radius: 20px; max-width: 600px; width: 90%; max-height: 80vh;
+            overflow-y: auto; padding: 2rem; transform: scale(0.9); transition: all 0.3s ease;
+        }
+        .modal-overlay.active .modal { transform: scale(1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #e0e0e0; }
+        .modal-header h3 { font-size: 1.25rem; color: #333; }
+        .close-btn { width: 32px; height: 32px; border: none; background: #f0f0f0; border-radius: 50%; font-size: 1.5rem; cursor: pointer; }
+        .modal-body { line-height: 1.6; }
+        .modal-footer { display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #e0e0e0; }
+        .provider-list { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
+        .provider-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem 1.5rem; border: 2px solid #e0e0e0; border-radius: 12px;
+            cursor: pointer; transition: all 0.3s ease; flex: 1; min-width: 180px;
+        }
+        .provider-item:hover { border-color: #667eea; background: rgba(102,126,234,0.05); }
+        .provider-item.active { border-color: #667eea; background: rgba(102,126,234,0.1); }
+        .provider-info h4 { font-size: 1rem; color: #333; margin-bottom: 0.25rem; }
+        .provider-info p { font-size: 0.875rem; color: #666; }
+        .provider-status { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; }
+        .check-icon { color: #667eea; font-weight: bold; font-size: 1.25rem; }
+        .history-list { display: grid; gap: 1rem; }
+        .history-item {
+            border: 2px solid #e0e0e0; border-radius: 12px; padding: 1rem; cursor: pointer; transition: all 0.3s ease;
+        }
+        .history-item:hover { border-color: #667eea; box-shadow: 0 4px 15px rgba(102,126,234,0.2); }
+        .history-item-title { font-weight: 600; color: #333; margin-bottom: 0.5rem; }
+        .history-item-meta { font-size: 0.875rem; color: #999; display: flex; gap: 1rem; }
+        .suggestion-buttons { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+        .suggestion-btn {
+            padding: 0.5rem 1rem; background: rgba(102,126,234,0.1); border: 1px solid #667eea;
+            color: #667eea; border-radius: 20px; cursor: pointer; font-size: 0.875rem;
+        }
+        .suggestion-btn:hover { background: #667eea; color: white; }
+        @media (max-width: 768px) {
+            .header-content { flex-direction: column; gap: 1rem; padding: 0.75rem 1rem; }
+            .nav-menu { width: 100%; overflow-x: auto; padding-bottom: 0.5rem; }
+            .nav-item { padding: 0.5rem 1rem; font-size: 0.875rem; white-space: nowrap; }
+            .main-content { padding: 0.75rem; }
+            .two-column-layout { grid-template-columns: 1fr; }
+            .hero-title { font-size: 1.5rem; }
+            .hero-stats { gap: 1.5rem; }
+            .stat-number { font-size: 1.75rem; }
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="app-container">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">🎓</div>
+                    <div class="logo-text">
+                        <h1>Echo支教智囊</h1>
+                        <p>AI赋能支教师资培养</p>
+                    </div>
+                </div>
+                <nav class="nav-menu">
+                    <button class="nav-item active" onclick="App.navigateTo('home', this)">
+                        <span class="icon">🏠</span>
+                        <span>首页</span>
+                    </button>
+                    <button class="nav-item" onclick="App.navigateTo('training', this)">
+                        <span class="icon">🎯</span>
+                        <span>模拟实训舱</span>
+                    </button>
+                    <button class="nav-item" onclick="App.navigateTo('resources', this)">
+                        <span class="icon">📚</span>
+                        <span>智创资源库</span>
+                    </button>
+                    <button class="nav-item" onclick="App.navigateTo('feedback', this)">
+                        <span class="icon">📊</span>
+                        <span>评诊反馈台</span>
+                    </button>
+                    <button class="nav-item" onclick="App.navigateTo('chat', this)">
+                        <span class="icon">💬</span>
+                        <span>智能助手</span>
+                    </button>
+                </nav>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <section id="page-home" class="page active">
+                <div class="hero-section">
+                    <div class="hero-content">
+                        <h2 class="hero-title">欢迎使用 Echo支教智囊</h2>
+                        <p class="hero-subtitle">
+                            基于"练—备—评"闭环的AI支教师资培养平台，帮助您在支教前和支教初期快速成长
+                        </p>
+                        <div class="hero-stats">
+                            <div class="stat-item">
+                                <span class="stat-number" id="statPlans">0</span>
+                                <span class="stat-label">份教案</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="statTrainings">0</span>
+                                <span class="stat-label">次训练</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="statReviews">0</span>
+                                <span class="stat-label">次回顾</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section-divider">
+                    <span class="divider-icon">🎯</span>
+                    <span class="divider-text">快速入口</span>
+                    <span class="divider-line"></span>
+                </div>
+                
+                <div class="quick-actions">
+                    <div class="action-card" onclick="App.navigateTo('training')">
+                        <div class="card-icon">🎯</div>
+                        <h4>模拟实训舱</h4>
+                        <p>练习课堂突发状况，提升临场反应能力</p>
+                    </div>
+                    <div class="action-card" onclick="App.navigateTo('resources')">
+                        <div class="card-icon">📝</div>
+                        <h4>智能生成教案</h4>
+                        <p>输入课题，AI生成结构化教案</p>
+                    </div>
+                    <div class="action-card" onclick="App.navigateTo('feedback')">
+                        <div class="card-icon">📊</div>
+                        <h4>课程回顾反思</h4>
+                        <p>通过问卷回顾，发现教学不足</p>
+                    </div>
+                    <div class="action-card" onclick="App.navigateTo('chat')">
+                        <div class="card-icon">💬</div>
+                        <h4>智能问答助手</h4>
+                        <p>随时解答您的支教疑问</p>
+                    </div>
+                </div>
+                
+                <div class="section-divider">
+                    <span class="divider-icon">📈</span>
+                    <span class="divider-text">学习追踪</span>
+                    <span class="divider-line"></span>
+                </div>
+                
+                <div class="card performance-card">
+                    <h3 class="card-title">🏆 最近表现</h3>
+                    <div id="recentPerformance">
+                        <div class="empty-state">
+                            <div class="icon">📈</div>
+                            <p>暂无训练记录</p>
+                            <span>开始使用各项功能，提升您的支教能力</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="page-training" class="page">
+                <div class="page-header">
+                    <h2 class="page-title">🎯 模拟实训舱</h2>
+                    <p class="page-description">在安全环境中练习课堂突发状况与学生提问</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">🧑‍🏫 身份设定</div>
+                    <p style="color: #666; margin-bottom: 1rem;">选择一个教学身份</p>
+                    <div class="identity-options" id="identityOptions">
+                        <div class="identity-option selected" onclick="App.selectIdentity(this, 'rural-teacher')">
+                            <div class="icon">🏫</div>
+                            <h4>乡村教师</h4>
+                            <p>面对基础设施有限的农村学校</p>
+                        </div>
+                        <div class="identity-option" onclick="App.selectIdentity(this, 'new-volunteer')">
+                            <div class="icon">🎒</div>
+                            <h4>新任志愿者</h4>
+                            <p>第一次参与支教活动</p>
+                        </div>
+                        <div class="identity-option" onclick="App.selectIdentity(this, 'mixed-age')">
+                            <div class="icon">👨‍👩‍👧‍👦</div>
+                            <h4>混龄班教师</h4>
+                            <p>同时教授不同年级学生</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">🎮 情境微模拟</div>
+                    <div id="scenarioDisplay" style="background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%); border-left: 4px solid #667eea; padding: 1.5rem; border-radius: 0 12px 12px 0; margin-bottom: 1.5rem;"></div>
+                    <div class="form-group">
+                        <label>选择场景类型</label>
+                        <select id="trainingScenario">
+                            <option value="emergency">突发状况应对 - 停电、设备故障</option>
+                            <option value="student-fight">学生冲突调解</option>
+                            <option value="student-question">学生提问应对</option>
+                            <option value="shy-student">鼓励内向学生</option>
+                            <option value="first-class">第一堂课破冰</option>
+                            <option value="homework-check">作业没完成</option>
+                            <option value="resource-shortage">资源短缺应变</option>
+                            <option value="parent-meeting">家长会发言</option>
+                            <option value="sleepy-student">学生上课睡觉</option>
+                            <option value="talented-student">优等生"吃不饱"</option>
+                            <option value="sports-injury">体育课受伤</option>
+                            <option value="mobile-phone">学生带手机</option>
+                            <option value="nose-bleed">学生流鼻血</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary btn-large" onclick="App.startTraining()" style="width: 100%;">🚀 开始模拟训练</button>
+                </div>
+                <div class="card" id="scenarioResponse" style="display: none;">
+                    <div class="card-title">💬 你的回答</div>
+                    <textarea id="scenarioResponseText" rows="4" placeholder="请输入你的回答..." style="width: 100%; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 12px; font-family: inherit; font-size: 1rem;"></textarea>
+                    <button class="btn btn-primary btn-large" onclick="App.submitResponse()" style="width: 100%; margin-top: 1rem;">📤 提交回答</button>
+                </div>
+                <div class="card" id="scenarioResult" style="display: none;">
+                    <div class="card-title">📋 训练结果</div>
+                    <div id="scenarioResultContent"></div>
+                </div>
+                <div class="card">
+                    <div class="card-title">📚 训练历史</div>
+                    <div id="trainingHistory">
+                        <div class="empty-state">
+                            <div class="icon">📋</div>
+                            <p>暂无训练记录</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="page-resources" class="page">
+                <div class="page-header">
+                    <h2 class="page-title">📚 智创资源库</h2>
+                    <p class="page-description">减轻备课压力，提供即时的资源教案与推荐</p>
+                </div>
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="App.switchTab('create-plan', this)">📝 生成教案</button>
+                    <button class="tab-btn" onclick="App.switchTab('history-plans', this)">📜 历史教案</button>
+                    <button class="tab-btn" onclick="App.switchTab('case-library', this)">📂 案例库</button>
+                    <button class="tab-btn" onclick="App.switchTab('import-case', this)">📥 导入案例</button>
+                    <button class="tab-btn" onclick="App.switchTab('ppt-generator', this)">📊 PPT大纲</button>
+                </div>
+                <div class="tab-content active" id="tab-create-plan">
+                    <div class="two-column-layout">
+                        <div class="card">
+                            <div class="card-title">📝 教案基本信息</div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>学科 <span class="required">*</span></label>
+                                    <select id="planSubject">
+                                        <option value="">请选择学科</option>
+                                        <option value="语文">语文</option>
+                                        <option value="数学">数学</option>
+                                        <option value="英语">英语</option>
+                                        <option value="科学">科学</option>
+                                        <option value="道德与法治">道德与法治</option>
+                                        <option value="音乐">音乐</option>
+                                        <option value="美术">美术</option>
+                                        <option value="体育">体育</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>年级 <span class="required">*</span></label>
+                                    <select id="planGrade">
+                                        <option value="">请选择年级</option>
+                                        <option value="一年级">小学一年级</option>
+                                        <option value="二年级">小学二年级</option>
+                                        <option value="三年级">小学三年级</option>
+                                        <option value="四年级">小学四年级</option>
+                                        <option value="五年级">小学五年级</option>
+                                        <option value="六年级">小学六年级</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>课时时长</label>
+                                    <select id="planDuration">
+                                        <option value="30">30分钟</option>
+                                        <option value="40">40分钟</option>
+                                        <option value="45">45分钟</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>课程主题 <span class="required">*</span></label>
+                                <input type="text" id="planTopic" placeholder="例如：角的初步认识、春天来了">
+                            </div>
+                            <div class="form-group">
+                                <label>学生情况</label>
+                                <textarea id="planStudentInfo" rows="2" placeholder="描述学生的基本情况"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>可用资源</label>
+                                <textarea id="planResources" rows="2" placeholder="例如：多媒体教室、黑板"></textarea>
+                            </div>
+                            <button class="btn btn-primary btn-large" onclick="App.generatePlan()" style="width: 100%;">✨ AI智能生成教案</button>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">📋 生成结果</div>
+                            <div id="planResultContainer">
+                                <div class="result-placeholder">
+                                    <div class="icon">📝</div>
+                                    <p>填写左侧表单信息</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content" id="tab-history-plans">
+                    <div class="card">
+                        <div class="card-title">📜 历史教案</div>
+                        <div id="historyContainer">
+                            <div class="empty-state">
+                                <div class="icon">📜</div>
+                                <p>暂无历史教案</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content" id="tab-case-library">
+                    <div class="card">
+                        <div class="card-title">📂 案例库</div>
+                        <div class="form-group">
+                            <label>按标签筛选</label>
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                                <button class="btn btn-secondary" onclick="App.filterCases('all')" style="padding: 0.5rem 1rem;">全部</button>
+                                <button class="btn btn-secondary" onclick="App.filterCases('破冰')" style="padding: 0.5rem 1rem;">破冰</button>
+                                <button class="btn btn-secondary" onclick="App.filterCases('教学')" style="padding: 0.5rem 1rem;">教学</button>
+                                <button class="btn btn-secondary" onclick="App.filterCases('管理')" style="padding: 0.5rem 1rem;">班级管理</button>
+                                <button class="btn btn-secondary" onclick="App.filterCases('自定义')" style="padding: 0.5rem 1rem;">自定义</button>
+                            </div>
+                        </div>
+                        <div id="caseLibraryContainer"></div>
+                    </div>
+                </div>
+                <div class="tab-content" id="tab-import-case">
+                    <div class="card">
+                        <div class="card-title">📥 导入自定义案例</div>
+                        <div class="form-group">
+                            <label>案例标题</label>
+                            <input type="text" id="caseTitle" placeholder="例如：我的第一堂课">
+                        </div>
+                        <div class="form-group">
+                            <label>标签</label>
+                            <input type="text" id="caseTags" placeholder="用逗号分隔，例如：教学,班级管理">
+                        </div>
+                        <div class="form-group">
+                            <label>案例内容</label>
+                            <textarea id="caseContent" rows="6" placeholder="详细描述您的教学经验..."></textarea>
+                        </div>
+                        <button class="btn btn-primary btn-large" onclick="App.importCase()" style="width: 100%;">✅ 保存案例</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">📝 从Word/WPS文档导入</div>
+                        <div style="background: #fff3cd; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                            <p style="margin: 0 0 0.5rem 0; font-weight: 600;">📖 导入步骤：</p>
+                            <p style="margin: 0; color: #666; line-height: 1.6;">
+                                1. 用Word、WPS或其他文字处理软件打开您的文档<br>
+                                2. 选中全部内容（Ctrl+A）<br>
+                                3. 复制内容（Ctrl+C）<br>
+                                4. 将内容粘贴到下方的文本框中<br>
+                                5. 点击"导入粘贴内容"按钮保存
+                            </p>
+                        </div>
+                        <textarea id="pasteContentInput" rows="6" placeholder="请在此处粘贴文档内容..." style="width: 100%; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 12px; resize: vertical; font-family: inherit;"></textarea>
+                        <div class="form-group" style="margin-top: 1rem;">
+                            <label>案例标题</label>
+                            <input type="text" id="pasteTitleInput" placeholder="输入案例标题，例如：我的支教经验">
+                        </div>
+                        <button class="btn btn-primary btn-large" onclick="App.importFromPaste()" style="width: 100%;">📋 导入粘贴内容</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">📁 从本地文件导入</div>
+                        <div style="background: #f0f0f0; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                            <p style="margin: 0 0 0.5rem 0; font-weight: 600;">📋 支持的文件格式：</p>
+                            <p style="margin: 0 0 0.5rem 0; color: #666;">
+                                <strong>✅ 纯文本格式（直接导入）：</strong><br>
+                                • .txt（文本文档）<br>
+                                • .md（Markdown文档）<br>
+                                • .csv（表格数据）<br>
+                                • .json（JSON数据）
+                            </p>
+                            <p style="margin: 0; color: #666;">
+                                <strong>⚠️ Office/WPS格式（需复制粘贴）：</strong><br>
+                                • .doc / .docx（Word文档）<br>
+                                • .pdf（PDF文档）<br>
+                                • .xls / .xlsx（Excel表格）<br>
+                                • .ppt / .pptx（PPT演示文稿）<br>
+                                <em style="font-size: 0.875rem;">提示：这类文件请使用下方的"从文档粘贴"功能</em>
+                            </p>
+                        </div>
+                        <div class="form-group">
+                            <input type="file" id="fileInput" accept=".txt,.md,.csv,.json" style="display: none;" onchange="App.handleFileUpload(this)">
+                            <button class="btn btn-secondary btn-large" onclick="document.getElementById('fileInput').click()" style="width: 100%;">📤 选择TXT/MD/CSV/JSON文件</button>
+                        </div>
+                        <div id="filePreview" style="margin-top: 1rem; display: none;">
+                            <div class="form-group">
+                                <label>文件预览</label>
+                                <textarea id="fileContentPreview" rows="6" placeholder="文件内容将在此显示..." style="width: 100%; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 12px; resize: vertical; font-family: inherit;"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>案例标题</label>
+                                <input type="text" id="fileCaseTitle" placeholder="案例标题">
+                            </div>
+                            <div class="form-group">
+                                <label>标签</label>
+                                <input type="text" id="fileCaseTags" placeholder="用逗号分隔，例如：教学,班级管理">
+                            </div>
+                            <button class="btn btn-primary btn-large" onclick="App.importFromFile()" style="width: 100%;">✅ 保存文件内容为案例</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content" id="tab-ppt-generator">
+                    <div class="card">
+                        <div class="card-title">📊 PPT大纲</div>
+                        <div class="form-group">
+                            <label>课程主题</label>
+                            <input type="text" id="pptTopic" placeholder="例如：春天来了">
+                        </div>
+                        <button class="btn btn-primary btn-large" onclick="App.generatePpt()" style="width: 100%;">🎨 生成PPT大纲</button>
+                        <div id="pptResult" style="margin-top: 2rem;"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="page-feedback" class="page">
+                <div class="page-header">
+                    <h2 class="page-title">📊 评诊反馈台</h2>
+                    <p class="page-description">对模拟表现和教案进行评价</p>
+                </div>
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="App.switchTab('self-review', this)">📋 课程回顾问卷</button>
+                    <button class="tab-btn" onclick="App.switchTab('plan-review', this)">📝 教案评分</button>
+                    <button class="tab-btn" onclick="App.switchTab('progress', this)">📈 成长追踪</button>
+                </div>
+                <div class="tab-content active" id="tab-self-review">
+                    <div class="card">
+                        <div class="card-title">📋 课程回顾问卷</div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>学科</label>
+                                <select id="reviewSubject">
+                                    <option value="">请选择</option>
+                                    <option value="语文">语文</option>
+                                    <option value="数学">数学</option>
+                                    <option value="英语">英语</option>
+                                    <option value="科学">科学</option>
+                                    <option value="其他">其他</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>课程主题</label>
+                                <input type="text" id="reviewTopic" placeholder="今天教了什么内容？">
+                            </div>
+                        </div>
+                        <div id="questionnaireContainer">
+                            <div class="questionnaire-item">
+                                <h4>1. 教学目标达成情况</h4>
+                                <div class="question-options">
+                                    <button class="question-option" onclick="App.selectAnswer(1, 4, this)">完全达成</button>
+                                    <button class="question-option" onclick="App.selectAnswer(1, 3, this)">大部分达成</button>
+                                    <button class="question-option" onclick="App.selectAnswer(1, 2, this)">部分达成</button>
+                                    <button class="question-option" onclick="App.selectAnswer(1, 1, this)">未达成</button>
+                                </div>
+                            </div>
+                            <div class="questionnaire-item">
+                                <h4>2. 学生参与度</h4>
+                                <div class="question-options">
+                                    <button class="question-option" onclick="App.selectAnswer(2, 4, this)">非常积极</button>
+                                    <button class="question-option" onclick="App.selectAnswer(2, 3, this)">比较积极</button>
+                                    <button class="question-option" onclick="App.selectAnswer(2, 2, this)">一般</button>
+                                    <button class="question-option" onclick="App.selectAnswer(2, 1, this)">不积极</button>
+                                </div>
+                            </div>
+                            <div class="questionnaire-item">
+                                <h4>3. 课堂管理效果</h4>
+                                <div class="question-options">
+                                    <button class="question-option" onclick="App.selectAnswer(3, 4, this)">非常好</button>
+                                    <button class="question-option" onclick="App.selectAnswer(3, 3, this)">比较好</button>
+                                    <button class="question-option" onclick="App.selectAnswer(3, 2, this)">一般</button>
+                                    <button class="question-option" onclick="App.selectAnswer(3, 1, this)">不好</button>
+                                </div>
+                            </div>
+                            <div class="questionnaire-item">
+                                <h4>4. 学生活动设计</h4>
+                                <div class="question-options">
+                                    <button class="question-option" onclick="App.selectAnswer(4, 4, this)">很多</button>
+                                    <button class="question-option" onclick="App.selectAnswer(4, 3, this)">较多</button>
+                                    <button class="question-option" onclick="App.selectAnswer(4, 2, this)">较少</button>
+                                    <button class="question-option" onclick="App.selectAnswer(4, 1, this)">没有</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                            <button class="btn btn-secondary" onclick="App.resetReview()">🔄 重置</button>
+                            <button class="btn btn-primary btn-large" onclick="App.submitReview()" style="flex: 1;">📊 提交分析</button>
+                        </div>
+                    </div>
+                    <div class="card" id="reviewResult" style="display: none;">
+                        <div class="card-title">📊 分析结果</div>
+                        <div id="reviewResultContent"></div>
+                    </div>
+                </div>
+                <div class="tab-content" id="tab-plan-review">
+                    <div class="card">
+                        <div class="card-title">📝 教案评分</div>
+                        <textarea id="planToReview" rows="10" placeholder="粘贴您的教案内容..." style="width: 100%; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 12px; resize: vertical; font-family: inherit;"></textarea>
+                        <button class="btn btn-primary btn-large" onclick="App.analyzePlan()" style="width: 100%; margin-top: 1rem;">🔍 分析教案</button>
+                        <div id="planReviewResult" style="margin-top: 2rem;"></div>
+                    </div>
+                </div>
+                <div class="tab-content" id="tab-progress">
+                    <div class="card">
+                        <div class="card-title">📈 成长追踪</div>
+                        <div id="progressChart">
+                            <div class="empty-state">
+                                <div class="icon">📈</div>
+                                <p>暂无数据</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="page-chat" class="page">
+                <div class="page-header">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h2 class="page-title">💬 智能助手</h2>
+                            <p class="page-description">随时解答您的支教疑问</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">🤖 AI模型选择</div>
+                    <div class="provider-list">
+                        <button class="provider-item active" onclick="App.selectModel('local', this)">
+                            <div class="provider-info">
+                                <h4>🏠 本地智能</h4>
+                                <p>内置知识库，无需网络</p>
+                            </div>
+                            <div class="provider-status">
+                                <span class="check-icon">✓</span>
+                            </div>
+                        </button>
+                        <button class="provider-item" onclick="App.selectModel('doubao', this)">
+                            <div class="provider-info">
+                                <h4>🫘 豆包AI</h4>
+                                <p>字节跳动AI模型</p>
+                            </div>
+                            <div class="provider-status"></div>
+                        </button>
+                        <button class="provider-item" onclick="App.selectModel('deepseek', this)">
+                            <div class="provider-info">
+                                <h4>🔮 DeepSeek</h4>
+                                <p>DeepSeek AI模型</p>
+                            </div>
+                            <div class="provider-status"></div>
+                        </button>
+                        <button class="provider-item" onclick="App.selectModel('zhipu', this)">
+                            <div class="provider-info">
+                                <h4>📘 智谱AI</h4>
+                                <p>智谱GLM模型</p>
+                            </div>
+                            <div class="provider-status"></div>
+                        </button>
+                    </div>
+                    <div id="apiKeyInput" style="margin-top: 1.5rem; display: none;">
+                        <div class="form-group">
+                            <label>API Key</label>
+                            <input type="password" id="apiKey" placeholder="请输入您的API Key">
+                        </div>
+                        <button class="btn btn-primary" onclick="App.saveApiKey()">💾 保存API Key</button>
+                    </div>
+                </div>
+                <div class="chat-container">
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="chat-message assistant">
+                            <div class="message-avatar">🤖</div>
+                            <div class="message-content">
+                                <strong>您好！我是Echo智能助手 🌟</strong>
+
+很高兴为您服务！作为您的支教AI助手，我可以帮助您：
+
+📝 教案设计 - 帮您生成完整的教学方案
+🎯 课堂应对 - 模拟训练突发状况
+📊 教学反思 - 分析教学不足并改进
+💡 专业建议 - 解答支教中的各种问题
+
+请随时告诉我，您需要什么帮助？
+                            </div>
+                        </div>
+                    </div>
+                    <div style="padding: 1rem; border-top: 1px solid #e0e0e0;">
+                        <div class="suggestion-buttons">
+                            <button class="suggestion-btn" onclick="App.sendChatMessage('如何上好第一堂课？')">如何上好第一堂课？</button>
+                            <button class="suggestion-btn" onclick="App.sendChatMessage('如何管理课堂纪律？')">如何管理课堂纪律？</button>
+                            <button class="suggestion-btn" onclick="App.sendChatMessage('如何设计教案？')">如何设计教案？</button>
+                        </div>
+                        <div class="chat-input-container" style="padding: 0; border-top: none;">
+                            <textarea class="chat-input" id="chatInput" placeholder="输入您的问题..." rows="1" onkeypress="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();App.sendChatMessage(document.getElementById('chatInput').value);}"></textarea>
+                            <button class="btn btn-primary" onclick="App.sendChatMessage(document.getElementById('chatInput').value)">发送</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modalTitle">提示</h3>
+                <button class="close-btn" onclick="App.closeModal()">×</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <p>内容</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="App.closeModal()">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    const App = {
+        selectedIdentity: 'rural-teacher',
+        currentModel: 'local',
+        reviewAnswers: {},
+        currentCaseFilter: 'all',
+        
+        STORAGE_KEYS: {
+            LESSON_PLANS: 'echo_lesson_plans_v3',
+            TRAINING_RECORDS: 'echo_training_records_v3',
+            REVIEW_RECORDS: 'echo_review_records_v3',
+            CUSTOM_CASES: 'echo_custom_cases_v3',
+            API_CONFIG: 'echo_api_config_v3'
+        },
+
+        TRAINING_SCENARIOS: {
+            emergency: {
+                title: '突发状况应对',
+                desc: '你正在讲课时，突然停电了，PPT和音响全都无法使用。学生开始骚动起来...',
+                tips: ['保持冷静，先稳定学生情绪', '利用板书和口述继续教学', '组织有趣的小组讨论或活动']
+            },
+            'student-fight': {
+                title: '学生冲突调解',
+                desc: '两个学生在教室里突然打架，情绪都很激动，其他学生在围观...',
+                tips: ['第一时间分开两人，确保安全', '用平和语气让其他学生回到座位', '单独与双方沟通']
+            },
+            'student-question': {
+                title: '学生提问应对',
+                desc: '一个学生举手问了一个你完全不知道答案的问题，全班都在看着你...',
+                tips: ['表扬学生的提问精神', '诚实地承认不知道', '引导全班一起思考']
+            },
+            'shy-student': {
+                title: '鼓励内向学生',
+                desc: '有个学生很害羞，从不举手发言，但你注意到他似乎有自己的想法...',
+                tips: ['课间单独交流，建立信任', '设计简单问题让他回答', '及时肯定和鼓励']
+            },
+            'first-class': {
+                title: '第一堂课破冰',
+                desc: '这是你第一次站在这个教室，学生们好奇又有点紧张地看着你...',
+                tips: ['做有趣的自我介绍', '设计简单的破冰游戏', '了解学生名字和爱好']
+            },
+            'homework-check': {
+                title: '作业没完成',
+                desc: '你检查作业时发现有好几个学生都没有完成...',
+                tips: ['先了解原因，不要批评', '看是否是作业太难', '分层布置作业']
+            },
+            'resource-shortage': {
+                title: '资源短缺应变',
+                desc: '你准备了一节需要多媒体的课，但发现教室根本没有电脑或投影仪...',
+                tips: ['立即调整教学设计', '利用生活中的物品替代', '增加学生动手活动']
+            },
+            'parent-meeting': {
+                title: '家长会发言',
+                desc: '第一次家长会，你要面对很多家长，有些看起来很严厉...',
+                tips: ['真诚地介绍自己', '多表扬学生优点', '倾听家长期望']
+            },
+            'sleepy-student': {
+                title: '学生上课睡觉',
+                desc: '有个学生在课堂上总是打瞌睡...',
+                tips: ['用眼神或轻敲桌子提醒', '让他回答一个简单问题', '课后了解原因']
+            },
+            'talented-student': {
+                title: '优等生"吃不饱"',
+                desc: '有学生觉得内容太简单，上课没兴趣，还影响其他人...',
+                tips: ['设计有挑战性的问题', '让他当小老师', '推荐课外读物']
+            },
+            'sports-injury': {
+                title: '体育课受伤',
+                desc: '学生在体育课上不小心扭伤了脚...',
+                tips: ['立即停止活动', '检查伤势', '冷敷并送医']
+            },
+            'mobile-phone': {
+                title: '学生带手机',
+                desc: '发现有学生把手机带到学校，上课还偷偷玩...',
+                tips: ['课后私下处理', '和学生约法三章', '联系家长']
+            },
+            'nose-bleed': {
+                title: '学生流鼻血',
+                desc: '有学生在课堂上突然流鼻血...',
+                tips: ['保持冷静', '让学生坐下，头稍微前倾', '捏住鼻翼']
+            }
+        },
+
+        CASE_LIBRARY: [
+            { id: 'case1', title: '第一堂课破冰指南', tags: ['破冰', '第一堂课', '经典'], content: '第一次见面很重要。建议：1.准备一个有趣的自我介绍；2.设计2-3个简单的破冰游戏；3.了解学生的名字和兴趣爱好；4.和学生一起制定课堂规则。' },
+            { id: 'case2', title: '无多媒体也能上好科学课', tags: ['科学', '教学', '乡村'], content: '没有投影仪也能上好科学课！利用：1.实物演示；2.学生动手操作；3.板书画图；4.生活物品做实验材料。让学生在动手中学习！' },
+            { id: 'case3', title: '混龄班分组教学技巧', tags: ['教学', '混龄班', '管理'], content: '混龄班教学需要合理分组：1.异质分组，大带小；2.同质分组，按能力分层；3.任务设计兼顾不同年龄段；4.定期调整分组。' },
+            { id: 'case4', title: '用乡村材料教数学', tags: ['数学', '乡土', '教学'], content: '用乡村材料教数学概念：用绳子围田地教周长，用树枝量长度，用泥土捏几何体，用树叶找对称轴。让学生在实践中学习！' },
+            { id: 'case5', title: '观察写作课', tags: ['语文', '写作', '乡土'], content: '利用乡村环境开展观察写作课：1.带学生观察校园植物；2.描写田野风光；3.观察乡村动物；4.图文结合写观察日记。' },
+            { id: 'case6', title: '正面管教课堂管理', tags: ['管理', '纪律', '经典'], content: '有效课堂管理技巧：1.建立明确规则；2.用眼神、手势提醒；3.及时表扬；4.保持节奏紧凑；5.问题私下处理。' },
+            { id: 'case7', title: '无乐器音乐课', tags: ['音乐', '节奏', '乡土'], content: '用拍手、跺脚、拍桌子打节奏；用瓶子装沙子做沙锤；用木棍敲桌面；让学生在打击乐中感受节奏！' },
+            { id: 'case8', title: '自然材料手工课', tags: ['美术', '手工', '乡土'], content: '利用乡村自然材料开展美术课：1.树叶拼贴画；2.石头彩绘；3.泥土陶艺；4.玉米叶编织。成本低，效果好！' },
+            { id: 'case9', title: '班会课品德教育', tags: ['德育', '班会', '管理'], content: '用故事和身边事例开展德育教育：1.讲励志故事；2.分享好人好事；3.讨论身边问题；4.设计实践活动。' },
+            { id: 'case10', title: '家长会沟通技巧', tags: ['家校', '沟通', '管理'], content: '家长会沟通技巧：1.多表扬，少批评；2.具体描述学生表现；3.倾听家长意见；4.表达合作意愿。' }
+        ],
+
+        init() {
+            this.loadApiConfig();
+            this.updateStats();
+            this.renderCases();
+            this.renderHistory();
+            this.renderTrainingHistory();
+            console.log('Echo支教智囊初始化完成');
+        },
+
+        navigateTo(page, btn) {
+            try {
+                document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                
+                if (btn) btn.classList.add('active');
+                document.getElementById('page-' + page).classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } catch(e) {
+                console.error('导航错误:', e);
+                this.showToast('导航出错', 'error');
+            }
+        },
+
+        switchTab(tabName, btn) {
+            try {
+                const page = document.querySelector('.page.active');
+                page.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                page.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                btn.classList.add('active');
+                document.getElementById('tab-' + tabName).classList.add('active');
+                
+                if (tabName === 'case-library') this.renderCases();
+                if (tabName === 'history-plans') this.renderHistory();
+            } catch(e) {
+                console.error('切换标签错误:', e);
+            }
+        },
+
+        selectIdentity(el, identity) {
+            document.querySelectorAll('.identity-option').forEach(opt => opt.classList.remove('selected'));
+            el.classList.add('selected');
+            this.selectedIdentity = identity;
+            this.showToast('已切换身份', 'success');
+        },
+
+        startTraining() {
+            try {
+                const scenarioId = document.getElementById('trainingScenario').value;
+                const scenario = this.TRAINING_SCENARIOS[scenarioId];
+                if (!scenario) {
+                    this.showToast('请选择场景', 'warning');
+                    return;
+                }
+                
+                const display = document.getElementById('scenarioDisplay');
+                display.style.display = 'block';
+                display.innerHTML = '<h4 style="color: #667eea; margin-bottom: 0.5rem;">🎭 ' + scenario.title + '</h4><p style="line-height: 1.8;">' + scenario.desc + '</p>';
+                
+                document.getElementById('scenarioResponse').style.display = 'block';
+                document.getElementById('scenarioResult').style.display = 'none';
+                document.getElementById('scenarioResponseText').value = '';
+                
+                this.showToast('训练开始', 'success');
+            } catch(e) {
+                this.showToast('启动训练出错', 'error');
+            }
+        },
+
+        submitResponse() {
+            try {
+                const response = document.getElementById('scenarioResponseText').value.trim();
+                const scenarioId = document.getElementById('trainingScenario').value;
+                const scenario = this.TRAINING_SCENARIOS[scenarioId];
+                
+                if (!response) {
+                    this.showToast('请输入回答', 'warning');
+                    return;
+                }
+                
+                const score = Math.floor(Math.random() * 30) + 70;
+                const feedback = score >= 85 ? '很棒！你的应对方案考虑周全，体现了良好的教育智慧。' : 
+                               score >= 70 ? '不错！你的应对方案基本合理，可以进一步完善。' : 
+                               '建议考虑更多因素，多参考案例库中的处理方法。';
+                
+                const resultContent = '<div style="text-align: center; padding: 1.5rem;"><div style="font-size: 3rem; font-weight: 700; color: #667eea;">' + score + '分</div></div>' +
+                    '<div class="result-card"><h4>💡 评价</h4><p>' + feedback + '</p></div>' +
+                    '<div class="result-card"><h4>🎯 建议做法</h4><ul>' + scenario.tips.map(t => '<li>' + t + '</li>').join('') + '</ul></div>';
+                
+                document.getElementById('scenarioResultContent').innerHTML = resultContent;
+                document.getElementById('scenarioResponse').style.display = 'none';
+                document.getElementById('scenarioResult').style.display = 'block';
+                
+                this.saveTrainingRecord({
+                    scenarioId,
+                    scenarioTitle: scenario.title,
+                    response,
+                    score,
+                    identity: this.selectedIdentity
+                });
+                
+                this.updateStats();
+                this.renderTrainingHistory();
+                this.showToast('训练完成！', 'success');
+            } catch(e) {
+                this.showToast('提交出错', 'error');
+            }
+        },
+
+        saveTrainingRecord(record) {
+            try {
+                const records = this.getStorage(this.STORAGE_KEYS.TRAINING_RECORDS) || [];
+                records.unshift({
+                    ...record,
+                    id: 't_' + Date.now(),
+                    timestamp: new Date().toISOString()
+                });
+                this.setStorage(this.STORAGE_KEYS.TRAINING_RECORDS, records);
+            } catch(e) {
+                console.error('保存训练记录失败:', e);
+            }
+        },
+
+        renderTrainingHistory() {
+            try {
+                const records = this.getStorage(this.STORAGE_KEYS.TRAINING_RECORDS) || [];
+                const container = document.getElementById('trainingHistory');
+                
+                if (records.length === 0) {
+                    container.innerHTML = '<div class="empty-state"><div class="icon">📋</div><p>暂无训练记录</p></div>';
+                    return;
+                }
+                
+                container.innerHTML = '<div class="history-list">' + records.slice(0, 10).map(r => 
+                    '<div class="history-item"><div class="history-item-title">' + r.scenarioTitle + '</div>' +
+                    '<div class="history-item-meta"><span>得分: ' + r.score + '分</span><span>' + 
+                    new Date(r.timestamp).toLocaleString() + '</span></div></div>'
+                ).join('') + '</div>';
+            } catch(e) {
+                console.error('渲染训练历史失败:', e);
+            }
+        },
+
+        generatePlan() {
+            try {
+                const subject = document.getElementById('planSubject').value;
+                const grade = document.getElementById('planGrade').value;
+                const topic = document.getElementById('planTopic').value.trim();
+                const duration = document.getElementById('planDuration').value || '40';
+                const studentInfo = document.getElementById('planStudentInfo').value.trim();
+                const resources = document.getElementById('planResources').value.trim();
+                
+                if (!subject || !grade || !topic) {
+                    this.showToast('请填写学科、年级和课程主题', 'warning');
+                    return;
+                }
+                
+                const subjectKnowledge = this.getSubjectKnowledge(subject, topic);
+                const gradeAdaptation = this.getGradeAdaptation(grade);
+                
+                const plan = {
+                    subject, grade, topic, duration,
+                    
+                    // 详细的教学目标
+                    objectives: [
+                        '📚 知识目标：',
+                        '   - 学生能够理解和掌握"' + topic + '"的基本概念',
+                        '   - 学生能识别"' + topic + '"的核心要素',
+                        '   - 学生能记住关于"' + topic + '"的关键知识点',
+                        '',
+                        '🎯 能力目标：',
+                        '   - 通过观察、思考、实践等活动，培养学生的分析能力',
+                        '   - 培养学生运用所学知识解决实际问题的能力',
+                        '   - 培养学生的合作学习和沟通表达能力',
+                        '',
+                        '💖 情感目标：',
+                        '   - 激发学生对' + subject + '的学习兴趣和好奇心',
+                        '   - 培养学生的学习自信心和成就感',
+                        '   - 培养学生的探索精神和创新意识'
+                    ],
+                    
+                    // 详细的教学重难点
+                    keyPoints: [
+                        '🎯 教学重点：',
+                        '   - ' + topic + '的核心概念和基本原理',
+                        '   - ' + topic + '在实际生活中的应用',
+                        '   - 掌握' + topic + '的基本方法和步骤',
+                        '',
+                        '⚠️ 教学难点：',
+                        '   - 帮助学生理解抽象概念并运用到实际',
+                        '   - 不同层次学生的理解差异',
+                        '   - 将理论知识与实践相结合'
+                    ],
+                    
+                    // 详细的教学准备
+                    preparation: [
+                        '📋 教师准备：',
+                        '   - 熟悉' + topic + '的相关知识',
+                        '   - 准备教学用具和材料',
+                        '   - 设计教学活动和练习题',
+                        '   - 准备备用教学方案',
+                        '',
+                        '📚 学生准备：',
+                        '   - 预习相关内容',
+                        '   - 准备学习用具',
+                        '',
+                        '🎨 教学资源：',
+                        '   - ' + (resources || '黑板、粉笔、教学图片、实物等'),
+                        '   - 相关的视频、图片资料',
+                        '   - 动手操作的材料'
+                    ],
+                    
+                    // 详细的教学过程
+                    process: this.generateDetailedProcess(topic, duration, subject),
+                    
+                    // 详细的课堂活动
+                    activities: [
+                        '🎮 导入活动：',
+                        '   - 有趣的问题引导',
+                        '   - 生活实例展示',
+                        '   - 小游戏或小实验',
+                        '',
+                        '🤝 探究活动：',
+                        '   - 小组讨论',
+                        '   - 合作探究',
+                        '   - 动手操作',
+                        '',
+                        '💡 巩固活动：',
+                        '   - 游戏巩固',
+                        '   - 竞赛活动',
+                        '   - 角色扮演'
+                    ],
+                    
+                    // 详细的作业设计
+                    homework: [
+                        '📝 基础作业：',
+                        '   - 完成课后练习',
+                        '   - 整理课堂笔记',
+                        '',
+                        '🌟 拓展作业：',
+                        '   - 观察生活中的' + topic + '现象',
+                        '   - 收集与' + topic + '相关的资料',
+                        '   - 尝试用所学知识解决生活问题',
+                        '',
+                        '🎨 实践作业（可选）：',
+                        '   - 制作与' + topic + '相关的小作品',
+                        '   - 写一篇观察日记'
+                    ],
+                    
+                    // 教学评价
+                    evaluation: [
+                        '✅ 课堂表现评价：',
+                        '   - 学生参与度',
+                        '   - 回答问题质量',
+                        '   - 小组合作表现',
+                        '',
+                        '📝 作业评价：',
+                        '   - 完成情况',
+                        '   - 正确率',
+                        '   - 创新性',
+                        '',
+                        '📊 学习效果评价：',
+                        '   - 知识掌握程度',
+                        '   - 能力提升情况',
+                        '   - 学习兴趣变化'
+                    ],
+                    
+                    // 板书设计
+                    blackboard: [
+                        '📋 ' + topic,
+                        '',
+                        '一、核心概念',
+                        '   1. ...',
+                        '   2. ...',
+                        '',
+                        '二、重点内容',
+                        '',
+                        '三、注意事项'
+                    ],
+                    
+                    // 教学反思
+                    reflection: [
+                        '🤔 教学反思要点：',
+                        '   - 教学目标是否达成',
+                        '   - 学生参与度如何',
+                        '   - 哪些地方需要改进',
+                        '   - 下次教学如何调整'
+                    ]
+                };
+                
+                this.saveLessonPlan(plan);
+                
+                document.getElementById('planResultContainer').innerHTML = 
+                    '<div class="result-card"><h4>� 教学目标</h4><pre style="white-space: pre-wrap; font-family: inherit;">' + plan.objectives.join('\n') + '</pre></div>' +
+                    '<div class="result-card"><h4>🎯 教学重难点</h4><pre style="white-space: pre-wrap; font-family: inherit;">' + plan.keyPoints.join('\n') + '</pre></div>' +
+                    '<div class="result-card"><h4>📋 教学准备</h4><pre style="white-space: pre-wrap; font-family: inherit;">' + plan.preparation.join('\n') + '</pre></div>' +
+                    '<div class="result-card"><h4>📝 教学过程</h4>' + 
+                    plan.process.map(p => '<div class="process-step"><div class="process-step-title">' + p.step + ' (' + p.duration + ')</div><div class="process-step-content"><pre style="white-space: pre-wrap; font-family: inherit; margin: 0;">' + p.content + '</pre></div></div>').join('') + 
+                    '</div>' +
+                    '<div class="result-card"><h4>🎮 课堂活动</h4><pre style="white-space: pre-wrap; font-family: inherit;">' + plan.activities.join('\n') + '</pre></div>' +
+                    '<div class="result-card"><h4>📚 作业设计</h4><pre style="white-space: pre-wrap; font-family: inherit;">' + plan.homework.join('\n') + '</pre></div>' +
+                    '<div class="result-card"><h4>📊 教学评价</h4><pre style="white-space: pre-wrap; font-family: inherit;">' + plan.evaluation.join('\n') + '</pre></div>' +
+                    '<div class="result-card"><h4>📋 板书设计</h4><pre style="white-space: pre-wrap; font-family: inherit;">' + plan.blackboard.join('\n') + '</pre></div>' +
+                    '<div class="result-card"><h4>🤔 教学反思</h4><pre style="white-space: pre-wrap; font-family: inherit;">' + plan.reflection.join('\n') + '</pre></div>';
+                
+                this.showToast('教案生成成功！', 'success');
+            } catch(e) {
+                console.error('生成教案错误:', e);
+                this.showToast('生成教案出错', 'error');
+            }
+        },
+        
+        getSubjectKnowledge(subject, topic) {
+            const knowledge = {
+                '语文': '语言文字、阅读写作、表达交流',
+                '数学': '数量关系、空间形式、逻辑推理',
+                '英语': '听说读写、词汇语法、文化意识',
+                '科学': '自然现象、科学探究、实验观察',
+                '道德与法治': '品德修养、法治观念、公民意识'
+            };
+            return knowledge[subject] || '学科知识';
+        },
+        
+        getGradeAdaptation(grade) {
+            if (grade.includes('1') || grade.includes('2')) {
+                return '直观形象、活动为主、多表扬鼓励';
+            } else if (grade.includes('3') || grade.includes('4')) {
+                return '抽象过渡、合作学习、引导探究';
+            } else {
+                return '自主学习、深度思考、创新应用';
+            }
+        },
+        
+        generateDetailedProcess(topic, duration, subject) {
+            const totalTime = parseInt(duration);
+            const importTime = Math.round(totalTime * 0.12);
+            const newKnowledgeTime = Math.round(totalTime * 0.4);
+            const practiceTime = Math.round(totalTime * 0.3);
+            const summaryTime = Math.round(totalTime * 0.1);
+            const homeworkTime = totalTime - importTime - newKnowledgeTime - practiceTime - summaryTime;
+            
+            return [
+                {
+                    step: '一、趣味导入',
+                    duration: importTime + '分钟',
+                    content: '🎯 教学目标：吸引注意力，激发兴趣\n\n' +
+                             '✨ 活动设计：\n' +
+                             '   1. 展示有趣的图片或实物\n' +
+                             '   2. 提出引发思考的问题\n' +
+                             '   3. 简短的小游戏或小实验\n' +
+                             '   4. 联系学生的生活经验\n\n' +
+                             '💡 教师引导语示例：\n' +
+                             '   "同学们，今天老师带来了一个有趣的东西...",\n' +
+                             '   "大家有没有在生活中见过...?"'
+                },
+                {
+                    step: '二、新知探究',
+                    duration: newKnowledgeTime + '分钟',
+                    content: '🎯 教学目标：理解核心概念，掌握基本方法\n\n' +
+                             '📚 教学内容：\n' +
+                             '   1. 讲解' + topic + '的基本概念\n' +
+                             '   2. 通过实例帮助理解\n' +
+                             '   3. 引导学生观察和思考\n' +
+                             '   4. 适时提问，检查理解\n\n' +
+                             '🤝 互动环节：\n' +
+                             '   - 师生问答\n' +
+                             '   - 小组讨论\n' +
+                             '   - 动手操作（如适用）'
+                },
+                {
+                    step: '三、巩固练习',
+                    duration: practiceTime + '分钟',
+                    content: '🎯 教学目标：巩固知识，提升能力\n\n' +
+                             '📝 练习设计：\n' +
+                             '   1. 基础练习：巩固基础知识\n' +
+                             '   2. 进阶练习：提升应用能力\n' +
+                             '   3. 拓展练习：培养创新思维\n\n' +
+                             '🎮 游戏化活动：\n' +
+                             '   - 竞赛游戏\n' +
+                             '   - 角色扮演\n' +
+                             '   - 小组PK\n\n' +
+                             '✅ 及时反馈：\n' +
+                             '   - 巡视指导\n' +
+                             '   - 针对性辅导\n' +
+                             '   - 鼓励表扬'
+                },
+                {
+                    step: '四、课堂总结',
+                    duration: summaryTime + '分钟',
+                    content: '🎯 教学目标：梳理知识，形成体系\n\n' +
+                             '📋 总结方式：\n' +
+                             '   1. 学生分享收获\n' +
+                             '   2. 教师引导梳理\n' +
+                             '   3. 知识结构图展示\n' +
+                             '   4. 强调重点难点\n\n' +
+                             '💡 思考延伸：\n' +
+                             '   - 生活中的应用\n' +
+                             '   - 下节课预告'
+                },
+                {
+                    step: '五、作业布置',
+                    duration: Math.max(homeworkTime, 2) + '分钟',
+                    content: '📚 作业设计（分层作业）：\n\n' +
+                             '⭐ 基础层：\n' +
+                             '   - 完成课后习题\n' +
+                             '   - 整理课堂笔记\n\n' +
+                             '⭐⭐ 提高层：\n' +
+                             '   - 观察生活中的' + topic + '现象\n' +
+                             '   - 收集相关资料\n\n' +
+                             '⭐⭐⭐ 挑战层（选做）：\n' +
+                             '   - 小制作或小实验\n' +
+                             '   - 写一篇观察日记'
+                }
+            ];
+        },
+
+        saveLessonPlan(plan) {
+            try {
+                const plans = this.getStorage(this.STORAGE_KEYS.LESSON_PLANS) || [];
+                plans.unshift({
+                    ...plan,
+                    id: 'p_' + Date.now(),
+                    timestamp: new Date().toISOString()
+                });
+                this.setStorage(this.STORAGE_KEYS.LESSON_PLANS, plans);
+            } catch(e) {
+                console.error('保存教案失败:', e);
+            }
+        },
+
+        renderHistory() {
+            try {
+                const plans = this.getStorage(this.STORAGE_KEYS.LESSON_PLANS) || [];
+                const container = document.getElementById('historyContainer');
+                
+                if (plans.length === 0) {
+                    container.innerHTML = '<div class="empty-state"><div class="icon">📜</div><p>暂无历史教案</p></div>';
+                    return;
+                }
+                
+                container.innerHTML = '<div class="history-list">' + plans.slice(0, 10).map(p => 
+                    '<div class="history-item" onclick="App.showCaseDetail(\'' + p.id + '\')"><div class="history-item-title">' + p.topic + ' (' + p.grade + ' ' + p.subject + ')</div>' +
+                    '<div class="history-item-meta"><span>' + new Date(p.timestamp).toLocaleString() + '</span></div></div>'
+                ).join('') + '</div>';
+            } catch(e) {
+                console.error('渲染历史教案失败:', e);
+            }
+        },
+
+        showCaseDetail(id) {
+            const plans = this.getStorage(this.STORAGE_KEYS.LESSON_PLANS) || [];
+            const plan = plans.find(p => p.id === id);
+            if (plan) {
+                this.showModal('教案详情', '<h4>' + plan.topic + '</h4><p>' + plan.objectives[0] + '</p>');
+            }
+        },
+
+        filterCases(tag) {
+            this.currentCaseFilter = tag;
+            this.renderCases();
+        },
+
+        renderCases() {
+            try {
+                const customCases = this.getStorage(this.STORAGE_KEYS.CUSTOM_CASES) || [];
+                let allCases = [...this.CASE_LIBRARY, ...customCases.map(c => ({...c, isCustom: true}))];
+                
+                if (this.currentCaseFilter !== 'all') {
+                    allCases = allCases.filter(c => c.tags.includes(this.currentCaseFilter));
+                }
+                
+                document.getElementById('caseLibraryContainer').innerHTML = allCases.map(c => 
+                    '<div class="case-card" onclick="App.viewCase(\'' + c.id + '\')"><h4>' + c.title + '</h4>' +
+                    '<div class="case-tags">' + c.tags.map(t => '<span class="case-tag">' + t + '</span>').join('') + '</div>' +
+                    '<p style="color:#666;margin-top:0.5rem;">' + c.content.substring(0, 100) + '...</p>' +
+                    (c.isCustom ? '<button class="btn btn-secondary" style="margin-top:0.75rem;font-size:0.75rem;" onclick="event.stopPropagation();App.deleteCase(\'' + c.id + '\')">🗑️ 删除</button>' : '') +
+                    '</div>'
+                ).join('') || '<div class="empty-state"><div class="icon">📂</div><p>暂无案例</p></div>';
+            } catch(e) {
+                console.error('渲染案例库失败:', e);
+            }
+        },
+
+        viewCase(id) {
+            const customCases = this.getStorage(this.STORAGE_KEYS.CUSTOM_CASES) || [];
+            const allCases = [...this.CASE_LIBRARY, ...customCases.map(c => ({...c, isCustom: true}))];
+            const c = allCases.find(x => x.id === id);
+            if (c) {
+                this.showModal(c.title, c.content);
+            }
+        },
+
+        importCase() {
+            try {
+                const title = document.getElementById('caseTitle').value.trim();
+                const tags = document.getElementById('caseTags').value.trim();
+                const content = document.getElementById('caseContent').value.trim();
+                
+                if (!title || !content) {
+                    this.showToast('请填写完整信息', 'warning');
+                    return;
+                }
+                
+                const tagList = tags ? tags.split(/[,，]/).map(t => t.trim()).filter(t => t) : ['自定义'];
+                const customCases = this.getStorage(this.STORAGE_KEYS.CUSTOM_CASES) || [];
+                
+                customCases.unshift({
+                    id: 'c_' + Date.now(),
+                    title,
+                    tags: [...tagList, '自定义'],
+                    content,
+                    isCustom: true
+                });
+                
+                this.setStorage(this.STORAGE_KEYS.CUSTOM_CASES, customCases);
+                
+                document.getElementById('caseTitle').value = '';
+                document.getElementById('caseTags').value = '';
+                document.getElementById('caseContent').value = '';
+                
+                this.showToast('案例保存成功', 'success');
+            } catch(e) {
+                this.showToast('保存失败', 'error');
+            }
+        },
+
+        handleFileUpload(input) {
+            try {
+                const file = input.files[0];
+                if (!file) return;
+                
+                const fileName = file.name;
+                const extension = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
+                
+                document.getElementById('fileCaseTitle').value = fileName.substring(0, fileName.lastIndexOf('.')) || '文件导入';
+                
+                // 检查文件类型
+                const textExtensions = ['txt', 'md', 'csv', 'json'];
+                const binaryExtensions = ['doc', 'docx', 'pdf', 'ppt', 'pptx', 'xls', 'xlsx'];
+                
+                if (!textExtensions.includes(extension)) {
+                    // 对于非纯文本格式，提示用户
+                    let message = '⚠️ 提示：';
+                    if (binaryExtensions.includes(extension)) {
+                        message += extension.toUpperCase() + '格式文件无法直接读取。\n\n建议方案：\n1. 用Word/WPS打开文件\n2. 复制内容\n3. 粘贴到"从文档粘贴"功能中\n\n是否跳转到粘贴功能？';
+                        
+                        if (confirm(message)) {
+                            // 切换到粘贴标签页
+                            const pasteTab = document.querySelector('#page-resources .tab-btn:nth-child(2)');
+                            if (pasteTab) {
+                                pasteTab.click();
+                            }
+                        }
+                        input.value = '';
+                        return;
+                    }
+                }
+                
+                // 对于纯文本文件，使用不同编码尝试读取
+                const reader = new FileReader();
+                
+                reader.onload = (e) => {
+                    let content = e.target.result;
+                    
+                    // 检查是否有乱码（检查是否包含大量不可见字符）
+                    const hasGarbled = this.detectGarbledText(content);
+                    
+                    if (hasGarbled) {
+                        // 尝试使用GBK/GB2312编码读取
+                        this.readFileWithEncoding(file, 'GBK').then(gbkContent => {
+                            if (!this.detectGarbledText(gbkContent)) {
+                                document.getElementById('fileContentPreview').value = gbkContent;
+                                document.getElementById('filePreview').style.display = 'block';
+                                this.showToast('文件加载成功（GBK编码）', 'success');
+                            } else {
+                                // 再尝试GB18030
+                                this.readFileWithEncoding(file, 'GB18030').then(gb18030Content => {
+                                    document.getElementById('fileContentPreview').value = gb18030Content;
+                                    document.getElementById('filePreview').style.display = 'block';
+                                    this.showToast('文件加载完成', 'success');
+                                }).catch(() => {
+                                    this.showToast('文件编码不支持，建议复制粘贴', 'warning');
+                                });
+                            }
+                        }).catch(() => {
+                            this.showToast('文件读取失败，请尝试复制粘贴', 'error');
+                        });
+                    } else {
+                        document.getElementById('fileContentPreview').value = content;
+                        document.getElementById('filePreview').style.display = 'block';
+                        this.showToast('文件加载成功', 'success');
+                    }
+                };
+                
+                reader.onerror = () => {
+                    this.showToast('文件读取失败', 'error');
+                };
+                
+                reader.readAsText(file);
+            } catch(e) {
+                this.showToast('文件处理失败', 'error');
+            }
+        },
+        
+        detectGarbledText(text) {
+            // 检测乱码：如果文本中不可见字符超过一定比例，认为是乱码
+            let invisibleCount = 0;
+            for (let i = 0; i < text.length; i++) {
+                const char = text.charCodeAt(i);
+                // 常见不可见字符范围
+                if ((char >= 0 && char <= 31 && char !== 9 && char !== 10 && char !== 13) || 
+                    (char >= 127 && char <= 159)) {
+                    invisibleCount++;
+                }
+            }
+            return invisibleCount / text.length > 0.1; // 如果超过10%是不可见字符，认为是乱码
+        },
+        
+        readFileWithEncoding(file, encoding) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        // 使用TextDecoder尝试指定编码
+                        const decoder = new TextDecoder(encoding);
+                        const uint8Array = new Uint8Array(e.target.result);
+                        const content = decoder.decode(uint8Array);
+                        resolve(content);
+                    } catch (err) {
+                        reject(err);
+                    }
+                };
+                reader.onerror = () => reject(new Error('读取失败'));
+                reader.readAsArrayBuffer(file);
+            });
+        },
+
+        importFromFile() {
+            try {
+                const content = document.getElementById('fileContentPreview').value.trim();
+                const title = document.getElementById('fileCaseTitle').value.trim() || '文件导入案例';
+                const tags = document.getElementById('fileCaseTags').value.trim();
+                
+                if (!content) {
+                    this.showToast('请确保文件内容', 'warning');
+                    return;
+                }
+                
+                const tagList = tags ? tags.split(/[,，]/).map(t => t.trim()).filter(t => t) : ['自定义'];
+                
+                const customCases = this.getStorage(this.STORAGE_KEYS.CUSTOM_CASES) || [];
+                
+                customCases.unshift({
+                    id: 'c_' + Date.now(),
+                    title,
+                    tags: [...tagList, '自定义', '文件导入'],
+                    content,
+                    isCustom: true
+                });
+                
+                this.setStorage(this.STORAGE_KEYS.CUSTOM_CASES, customCases);
+                
+                document.getElementById('fileContentPreview').value = '';
+                document.getElementById('fileCaseTitle').value = '';
+                document.getElementById('fileCaseTags').value = '';
+                document.getElementById('filePreview').style.display = 'none';
+                document.getElementById('fileInput').value = '';
+                
+                this.renderCases();
+                this.showToast('案例导入成功', 'success');
+            } catch(e) {
+                this.showToast('导入失败', 'error');
+            }
+        },
+
+        importFromPaste() {
+            try {
+                const content = document.getElementById('pasteContentInput').value.trim();
+                const title = document.getElementById('pasteTitleInput').value.trim() || '粘贴案例';
+                
+                if (!content) {
+                    this.showToast('请粘贴内容', 'warning');
+                    return;
+                }
+                
+                const customCases = this.getStorage(this.STORAGE_KEYS.CUSTOM_CASES) || [];
+                
+                customCases.unshift({
+                    id: 'c_' + Date.now(),
+                    title,
+                    tags: ['自定义', '粘贴导入'],
+                    content,
+                    isCustom: true
+                });
+                
+                this.setStorage(this.STORAGE_KEYS.CUSTOM_CASES, customCases);
+                
+                document.getElementById('pasteContentInput').value = '';
+                document.getElementById('pasteTitleInput').value = '';
+                
+                this.renderCases();
+                this.showToast('导入成功', 'success');
+            } catch(e) {
+                this.showToast('导入失败', 'error');
+            }
+        },
+
+        deleteCase(id) {
+            const customCases = this.getStorage(this.STORAGE_KEYS.CUSTOM_CASES) || [];
+            this.setStorage(this.STORAGE_KEYS.CUSTOM_CASES, customCases.filter(c => c.id !== id));
+            this.renderCases();
+            this.showToast('已删除', 'success');
+        },
+
+        generatePpt() {
+            try {
+                const topic = document.getElementById('pptTopic').value.trim();
+                
+                if (!topic) {
+                    this.showToast('请输入课程主题', 'warning');
+                    return;
+                }
+                
+                const slides = [
+                    { number: 1, title: topic, content: '课程导入' },
+                    { number: 2, title: '学习目标', content: '知识、能力、情感目标' },
+                    { number: 3, title: '核心概念', content: '重点知识讲解' },
+                    { number: 4, title: '活动设计', content: '学生活动安排' },
+                    { number: 5, title: '总结回顾', content: '课程小结' }
+                ];
+                
+                document.getElementById('pptResult').innerHTML = '<div class="result-card">' + 
+                    slides.map(s => '<div style="padding:1rem;border-bottom:1px solid #eee;"><h5>' + s.number + '. ' + s.title + '</h5><p style="color:#666;">' + s.content + '</p></div>').join('') + 
+                    '</div>';
+                
+                this.showToast('PPT大纲生成成功', 'success');
+            } catch(e) {
+                this.showToast('生成失败', 'error');
+            }
+        },
+
+        selectAnswer(q, score, btn) {
+            const parent = btn.closest('.questionnaire-item');
+            parent.querySelectorAll('.question-option').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            this.reviewAnswers[q] = score;
+        },
+
+        resetReview() {
+            this.reviewAnswers = {};
+            document.querySelectorAll('.question-option').forEach(b => b.classList.remove('selected'));
+        },
+
+        submitReview() {
+            try {
+                const answers = Object.values(this.reviewAnswers);
+                
+                if (answers.length < 4) {
+                    this.showToast('请完成所有问题', 'warning');
+                    return;
+                }
+                
+                const avgScore = answers.reduce((a, b) => a + b, 0) / answers.length;
+                const percent = Math.round(avgScore / 4 * 100);
+                const level = percent >= 80 ? '优秀' : percent >= 60 ? '良好' : '需改进';
+                const feedback = percent >= 80 ? '表现很棒，继续保持！' : 
+                                percent >= 60 ? '表现不错，还有提升空间' : '需要更多练习，加油！';
+                
+                document.getElementById('reviewResult').style.display = 'block';
+                document.getElementById('reviewResultContent').innerHTML = 
+                    '<div style="text-align:center;padding:1.5rem;"><div style="font-size:3rem;font-weight:700;color:#667eea;">' + percent + '分</div>' +
+                    '<p style="color:#666;">' + level + '</p></div>' +
+                    '<div class="result-card"><h4>💡 反馈</h4><p>' + feedback + '</p></div>';
+                
+                this.saveReviewRecord({
+                    subject: document.getElementById('reviewSubject').value,
+                    topic: document.getElementById('reviewTopic').value,
+                    score: percent,
+                    level
+                });
+                
+                this.updateStats();
+                this.showToast('分析完成', 'success');
+            } catch(e) {
+                this.showToast('提交失败', 'error');
+            }
+        },
+
+        saveReviewRecord(record) {
+            try {
+                const records = this.getStorage(this.STORAGE_KEYS.REVIEW_RECORDS) || [];
+                records.unshift({
+                    ...record,
+                    id: 'r_' + Date.now(),
+                    timestamp: new Date().toISOString()
+                });
+                this.setStorage(this.STORAGE_KEYS.REVIEW_RECORDS, records);
+            } catch(e) {
+                console.error('保存回顾记录失败:', e);
+            }
+        },
+
+        analyzePlan() {
+            try {
+                const content = document.getElementById('planToReview').value.trim();
+                if (!content) {
+                    this.showToast('请输入教案内容', 'warning');
+                    return;
+                }
+                
+                const score = Math.floor(Math.random() * 30) + 70;
+                const level = score >= 85 ? '优秀' : score >= 70 ? '良好' : '合格';
+                
+                document.getElementById('planReviewResult').innerHTML = 
+                    '<div style="text-align:center;padding:1.5rem;"><div style="font-size:3rem;font-weight:700;color:#667eea;">' + score + '分</div>' +
+                    '<p>' + level + '</p></div>' +
+                    '<div class="result-card"><h4>📋 评价</h4><p>教案结构完整，建议增加更多学生活动设计。</p></div>';
+                
+                this.showToast('分析完成', 'success');
+            } catch(e) {
+                this.showToast('分析失败', 'error');
+            }
+        },
+
+        selectModel(model, btn) {
+            document.querySelectorAll('.provider-item').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            this.currentModel = model;
+            
+            document.getElementById('apiKeyInput').style.display = model === 'local' ? 'none' : 'block';
+            this.loadApiConfig();
+            this.showToast('已切换AI模型', 'success');
+        },
+
+        loadApiConfig() {
+            try {
+                const config = this.getStorage(this.STORAGE_KEYS.API_CONFIG);
+                if (config && config.apiKey) {
+                    document.getElementById('apiKey').value = config.apiKey;
+                }
+            } catch(e) {
+                console.error('加载API配置失败:', e);
+            }
+        },
+
+        saveApiKey() {
+            try {
+                const apiKey = document.getElementById('apiKey').value.trim();
+                if (apiKey) {
+                    this.setStorage(this.STORAGE_KEYS.API_CONFIG, { model: this.currentModel, apiKey });
+                    this.showToast('API Key已保存', 'success');
+                }
+            } catch(e) {
+                this.showToast('保存失败', 'error');
+            }
+        },
+
+        async sendChatMessage(msg) {
+            try {
+                if (!msg.trim()) return;
+                
+                const messagesDiv = document.getElementById('chatMessages');
+                const input = document.getElementById('chatInput');
+                
+                messagesDiv.innerHTML += '<div class="chat-message user"><div class="message-avatar">👤</div><div class="message-content">' + msg + '</div></div>';
+                input.value = '';
+                
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'chat-message assistant';
+                typingDiv.innerHTML = '<div class="message-avatar">🤖</div><div class="message-content">正在思考...</div>';
+                messagesDiv.appendChild(typingDiv);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                
+                let response = '';
+                if (this.currentModel === 'local') {
+                    response = this.getLocalResponse(msg);
+                } else {
+                    response = await this.callExternalAI(msg);
+                }
+                
+                typingDiv.querySelector('.message-content').textContent = response;
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            } catch(e) {
+                console.error('发送消息错误:', e);
+                this.showToast('发送失败', 'error');
+            }
+        },
+
+        getLocalResponse(msg) {
+            const lowerMsg = msg.toLowerCase();
+            
+            if (lowerMsg.includes('第一堂') || lowerMsg.includes('第一次')) {
+                return `🎓 **上好第一堂课的完整指南 🎓
+
+**一、课前准备（至关重要）**
+1. 了解班级情况：提前了解学生人数、年龄层次、学习基础
+2. 准备充分：准备有趣的自我介绍
+3. 准备2-3个简单的破冰游戏
+4. 了解学生的名字和基本情况
+5. 准备简单的课堂规则草稿
+
+**二、课堂流程建议**
+1. 热情问候与破冰（15分钟）
+   - 有趣的自我介绍，展示你的亲和力
+   - 破冰游戏：名字接龙、两真一假
+2. 互相了解（10分钟）
+3. 共同制定规则（10分钟）
+4. 简单的课程介绍（10分钟）
+5. 愉快结束（5分钟）
+
+**三、实用技巧**
+✅ 保持微笑，真诚最重要！
+✅ 记住学生的名字，让他们感到被重视
+✅ 积极倾听学生的想法
+✅ 营造轻松愉快的课堂氛围
+✅ 展示你对支教的热情和对学生的关爱
+
+**四、注意事项**
+⚠️ 第一堂课不要讲太多内容
+⚠️ 重点是建立关系和了解彼此
+⚠️ 保持积极鼓励为主`;
+            }
+            
+            if (lowerMsg.includes('课堂') || lowerMsg.includes('纪律') || lowerMsg.includes('管理')) {
+                return `📚 **课堂管理完全指南 📚
+
+**一、课前准备**
+1. 制定清晰明确的课堂规则
+2. 准备丰富的教学内容
+3. 设计互动活动
+4. 准备备用方案
+
+**二、课堂管理技巧**
+1. 建立明确的规则
+   - 和学生一起制定规则
+   - 规则要简单易懂
+   - 明确奖惩措施
+2. 用眼神和手势提醒
+   - 眼神交流
+   - 手势信号
+3. 及时表扬和鼓励
+   - 具体的表扬
+   - 及时的反馈
+4. 问题私下处理
+   - 保护学生自尊心
+   - 一对一沟通
+5. 保持节奏紧凑
+   - 丰富的活动
+   - 多样的教学方法
+
+**三、常见问题处理**
+- 学生说话：用眼神提醒、走近学生、提问
+- 学生睡觉：让他回答问题、课后了解原因
+- 学生打架：立即制止、分开处理、了解原因
+
+**四、营造积极氛围**
+✅ 建立良好的师生关系
+✅ 创造有趣的课堂活动
+✅ 鼓励学生参与
+✅ 及时反馈和改进`;
+            }
+            
+            if (lowerMsg.includes('教案') || lowerMsg.includes('设计')) {
+                return `📝 **教案设计完整指南 📝
+
+**一、教案基本要素**
+1. 教学目标
+   - 知识目标
+   - 能力目标
+   - 情感目标
+2. 教学重难点
+3. 教学准备
+4. 教学过程
+5. 教学反思
+
+**二、设计步骤**
+1. 明确教学目标
+   - 具体可衡量
+   - 符合学生实际
+2. 了解学生情况
+   - 学习基础
+   - 学习兴趣点
+3. 设计教学活动
+   - 导入活动
+   - 新知识教授
+   - 练习巩固
+4. 准备备用方案
+5. 设计评价方式
+
+**三、实用建议**
+✅ 目标明确具体
+✅ 活动设计有趣
+✅ 考虑学生差异
+✅ 准备弹性时间
+✅ 设计多样教学方法
+
+**四、教案模板示例**
+- 教学目标：学生能理解...
+- 教学重点：...
+- 教学难点：...
+- 教学过程：导入-新授-练习-总结
+- 作业设计：...`;
+            }
+            
+            if (lowerMsg.includes('乡村') || lowerMsg.includes('农村')) {
+                return `🌾 **乡村支教完整指南 🌾
+
+**一、了解乡村环境**
+1. 了解当地文化习俗
+2. 了解学生家庭情况
+3. 了解学校资源条件
+4. 了解社区情况
+
+**二、利用当地资源**
+1. 自然资源
+   - 自然现象教学
+   - 植物动物观察
+2. 生活资源
+   - 生活实例
+   - 生活技能
+3. 文化资源
+   - 当地文化
+   - 传统技艺
+
+**三、教学策略**
+1. 设计动手活动
+   - 实践操作
+   - 实地考察
+2. 关注学生差异
+   - 分层教学
+   - 个别辅导
+3. 多鼓励表扬
+   - 建立自信
+   - 激发兴趣
+4. 与家长建立联系
+   - 家访
+   - 家长会
+
+**四、心态调整**
+✅ 保持积极乐观
+✅ 适应环境变化
+✅ 与当地老师合作
+✅ 持续学习改进`;
+            }
+            
+            if (lowerMsg.includes('破冰') || lowerMsg.includes('游戏')) {
+                return `🎮 **课堂游戏大全 🎮
+
+**一、破冰游戏（适合第一堂课）**
+1. 名字接龙
+   - 玩法：每个人说自己名字加一个特点
+   - 目的：记住名字，活跃气氛
+2. 两真一假
+   - 玩法：每个人说三句话，两句真一句假
+   - 目的：互相了解
+3. 找相同
+   - 玩法：找有相同爱好的同学
+   - 目的：建立联系
+4. 我的小秘密
+   - 玩法：分享一个小秘密
+   - 目的：增进信任
+
+**二、课堂活动**
+1. 小组讨论
+2. 角色扮演
+3. 游戏竞赛
+4. 动手操作
+5. 实地观察
+
+**三、注意事项**
+✅ 游戏安全第一
+✅ 适合学生年龄
+✅ 控制时间
+✅ 注重教育意义`;
+            }
+
+            if (lowerMsg.includes('ppt') || lowerMsg.includes('课件')) {
+                return `📊 **PPT/课件制作指南 📊
+
+**一、PPT设计原则**
+1. 简洁明了
+2. 重点突出
+3. 图文并茂
+4. 风格一致
+5. 互动性强
+
+**二、PPT结构建议**
+1. 封面页
+   - 课程标题
+   - 授课人
+   - 日期
+2. 目录页
+3. 内容页
+   - 每页一个要点
+   - 图文结合
+4. 总结页
+5. 作业/互动页
+
+**三、实用技巧**
+✅ 字体清晰易读
+✅ 色彩搭配协调
+✅ 动画适度
+✅ 预留互动
+✅ 备份方案
+
+**四、注意事项**
+⚠️ 内容不要太多
+⚠️ 字体不要太小
+⚠️ 色彩不要太艳
+⚠️ 动画不要太炫`;
+            }
+
+            if (lowerMsg.includes('学生') && (lowerMsg.includes('问题') || lowerMsg.includes('内向') || lowerMsg.includes('害羞'))) {
+                return `👶 **特殊学生应对指南 👶
+
+**一、内向/害羞学生**
+1. 建立信任关系
+   - 课间单独交流
+   - 耐心倾听
+   - 建立安全感
+2. 逐步引导参与
+   - 简单问题让他回答
+   - 小任务让他完成
+   - 及时肯定鼓励
+3. 创造安全环境
+   - 不强迫发言
+   - 营造包容氛围
+
+**二、调皮/好动学生**
+1. 安排适当任务
+   - 让他有事可做
+   - 发挥精力
+2. 明确规则期望
+3. 及时表扬好行为
+4. 课后沟通了解
+
+**三、学习困难学生**
+1. 降低难度
+2. 分层教学
+3. 个别辅导
+4. 多鼓励表扬
+5. 发现闪光点
+
+**四、通用原则**
+✅ 尊重每一个学生
+✅ 了解个体差异
+✅ 耐心和关爱
+✅ 积极鼓励为主
+✅ 与家长配合`;
+            }
+
+            if (lowerMsg.includes('家长') || lowerMsg.includes('家长会')) {
+                return `👨‍👩‍👧 **家校沟通指南 👨‍👩‍👧
+
+**一、家访技巧**
+1. 准备充分
+   - 了解学生情况
+   - 准备话题
+2. 态度诚恳
+   - 尊重家长
+   - 真诚沟通
+3. 多表扬少批评
+   - 具体表扬
+   - 委婉建议
+4. 倾听家长
+5. 建立合作
+
+**二、家长会**
+1. 准备内容
+   - 班级情况
+   - 教学计划
+   - 学生表现
+2. 沟通方式
+   - 简洁明了
+   - 积极互动
+3. 后续跟进
+
+**三、注意事项**
+✅ 尊重文化差异
+✅ 耐心解释
+✅ 积极反馈
+✅ 建立长期合作`;
+            }
+
+            return `🌟 **Echo支教智囊 🌟
+
+您好！很高兴为您服务！作为您的AI支教助手，我可以帮助您：
+
+📝 **教案设计**
+- 生成完整教案
+- 教学目标设定
+- 教学过程设计
+- 活动设计建议
+
+🎯 **课堂应对**
+- 课堂管理技巧
+- 突发状况处理
+- 学生问题应对
+- 互动活动设计
+
+📊 **教学反思**
+- 教学效果分析
+- 改进建议
+- 经验总结
+
+💡 **专业建议**
+- 支教心态调整
+- 乡村教学策略
+- 资源利用建议
+- 专业发展指导
+
+请告诉我您需要什么帮助？我会为您提供详细的指导！`;
+        },
+
+        async callExternalAI(msg) {
+            try {
+                const config = this.getStorage(this.STORAGE_KEYS.API_CONFIG);
+                if (!config || !config.apiKey) {
+                    return '请先配置API Key';
+                }
+                
+                return '（需要真实API接入，这里是模拟回复）您的问题是：' + msg + '\n\n建议：请先配置有效的API Key以获取智能回答。';
+            } catch(e) {
+                console.error('AI调用失败:', e);
+                return 'AI服务暂时不可用，请稍后再试。';
+            }
+        },
+
+        updateStats() {
+            try {
+                const plans = this.getStorage(this.STORAGE_KEYS.LESSON_PLANS) || [];
+                const trainings = this.getStorage(this.STORAGE_KEYS.TRAINING_RECORDS) || [];
+                const reviews = this.getStorage(this.STORAGE_KEYS.REVIEW_RECORDS) || [];
+                
+                document.getElementById('statPlans').textContent = plans.length;
+                document.getElementById('statTrainings').textContent = trainings.length;
+                document.getElementById('statReviews').textContent = reviews.length;
+            } catch(e) {
+                console.error('更新统计失败:', e);
+            }
+        },
+
+        getStorage(key) {
+            try {
+                const data = localStorage.getItem(key);
+                return data ? JSON.parse(data) : null;
+            } catch(e) {
+                console.error('读取存储失败:', e);
+                return null;
+            }
+        },
+
+        setStorage(key, value) {
+            try {
+                localStorage.setItem(key, JSON.stringify(value));
+            } catch(e) {
+                console.error('保存存储失败:', e);
+            }
+        },
+
+        showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = 'toast ' + type;
+            toast.innerHTML = message;
+            document.getElementById('toastContainer').appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        },
+
+        showModal(title, content) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalBody').innerHTML = content;
+            document.getElementById('modalOverlay').classList.add('active');
+        },
+
+        closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        App.init();
+    });
+</script>
+</body>
+</html>
